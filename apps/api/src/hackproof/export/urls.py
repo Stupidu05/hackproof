@@ -24,4 +24,6 @@ def asset_url(asset: str) -> str:
 
 
 def repo_file_url(repo_url: str, path: str) -> str:
+    if path.startswith(("https://", "http://")):
+        return path
     return f"{repo_url}/blob/HEAD/{quote(path, safe='/')}"

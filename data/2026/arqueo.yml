@@ -59,7 +59,7 @@ chain:
     subject: GAYWZ6RFP2XD4WPJFVPBGCXEQMEHMZXELDFFI2XQ2AP5VFLP4FNDMA6Z
     method: deployer_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/account/GAYWZ6RFP2XD4WPJFVPBGCXEQMEHMZXELDFFI2XQ2AP5VFLP4FNDMA6Z
-    file_url: https://github.com/Dabuca/arqueo/blob/HEAD/https%3A//arqueo-sooty.vercel.app/assets/index-C2-IfmsK.js
+    file_url: https://arqueo-sooty.vercel.app/assets/index-C2-IfmsK.js
   - kind: account
     subject: GBHX3Z3BW27ORH4VFKVP36FGRJGAEADYDWCIW3HGXQQGPWC6LEUCYIGK
     method: deployer_in_repo
@@ -74,7 +74,7 @@ chain:
     subject: GDATKZYV7GHROFDIA4ED3DDY6IH37T2KP6Z6XJOSDKHUXX6AOPLCM3CW
     method: deployer_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/account/GDATKZYV7GHROFDIA4ED3DDY6IH37T2KP6Z6XJOSDKHUXX6AOPLCM3CW
-    file_url: https://github.com/Dabuca/arqueo/blob/HEAD/https%3A//arqueo-sooty.vercel.app/assets/index-C2-IfmsK.js
+    file_url: https://arqueo-sooty.vercel.app/assets/index-C2-IfmsK.js
   - kind: account
     subject: GDUFOAGKAFX4IUCAYJHEXPNMOVX6NPVCWCXH2HPZNRGKEOQMZO5MH3YC
     method: deployer_in_repo

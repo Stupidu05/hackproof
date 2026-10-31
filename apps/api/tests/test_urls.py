@@ -31,3 +31,9 @@ def test_file_paths_are_percent_encoded_so_every_link_is_a_valid_url():
 
     assert url == "https://github.com/team/app/blob/HEAD/board/Leo%27s%20notes%20%231%20%28v2%29.md"
     assert " " not in url
+
+
+def test_evidence_found_in_a_demo_bundle_links_to_the_bundle_itself():
+    bundle = "https://demo.example.app/assets/index-abc.js"
+
+    assert repo_file_url("https://github.com/team/app", bundle) == bundle

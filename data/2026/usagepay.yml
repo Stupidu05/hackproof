@@ -38,7 +38,7 @@ chain:
     subject: GB6XZYHIGRQPG7L7CHZYFM3HFHKSJNBDXQZ5W5ZCDG5QEM32EEBAPOJC
     method: deployer_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/account/GB6XZYHIGRQPG7L7CHZYFM3HFHKSJNBDXQZ5W5ZCDG5QEM32EEBAPOJC
-    file_url: https://github.com/skopolabs/usagepay/blob/HEAD/https%3A//usagepay.vercel.app
+    file_url: https://usagepay.vercel.app
 contributors:
 - login: wesleymassine
   contributions: 79

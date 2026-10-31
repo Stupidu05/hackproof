@@ -38,7 +38,7 @@ chain:
     subject: CABLVEPQP7PN22YFXJJNX42PG7LTP3PPVAFIYE5LFQVDND5SBSTUSQYM
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CABLVEPQP7PN22YFXJJNX42PG7LTP3PPVAFIYE5LFQVDND5SBSTUSQYM
-    file_url: https://github.com/enzoblain/ZKross/blob/HEAD/https%3A//zkross.pages.dev/assets/index-Zi1DV6ON.js
+    file_url: https://zkross.pages.dev/assets/index-Zi1DV6ON.js
   - kind: contract
     subject: CBVC37MFGWDBTLAEGTEYPTTQDUO7KDVDD5RHWZVYN6BYOY3RTDLBGKRS
     method: contract_in_repo
@@ -48,22 +48,22 @@ chain:
     subject: CBWGOXIVKPSHNSV5ZTKIY2ZADDO6VGOGK2HM6XU7A24APCWLBCLK4KQM
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CBWGOXIVKPSHNSV5ZTKIY2ZADDO6VGOGK2HM6XU7A24APCWLBCLK4KQM
-    file_url: https://github.com/enzoblain/ZKross/blob/HEAD/https%3A//zkross.pages.dev/assets/index-Zi1DV6ON.js
+    file_url: https://zkross.pages.dev/assets/index-Zi1DV6ON.js
   - kind: contract
     subject: CBY6HVRKKVMZ7DN4XAJZGLBJ4UYNDJJLPYRDETQ6RAD4LHFBUMX6LZS3
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CBY6HVRKKVMZ7DN4XAJZGLBJ4UYNDJJLPYRDETQ6RAD4LHFBUMX6LZS3
-    file_url: https://github.com/enzoblain/ZKross/blob/HEAD/https%3A//zkross.pages.dev/assets/index-Zi1DV6ON.js
+    file_url: https://zkross.pages.dev/assets/index-Zi1DV6ON.js
   - kind: contract
     subject: CC63X4XNTSNZ6MONLFYXQ2NH6AH2O3KN653PPEVLQWM4RQVVZFPF3MVH
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CC63X4XNTSNZ6MONLFYXQ2NH6AH2O3KN653PPEVLQWM4RQVVZFPF3MVH
-    file_url: https://github.com/enzoblain/ZKross/blob/HEAD/https%3A//zkross.pages.dev/assets/index-Zi1DV6ON.js
+    file_url: https://zkross.pages.dev/assets/index-Zi1DV6ON.js
   - kind: contract
     subject: CD3TP3PL7U63IEEB4LQCEFV2AMZSOWGWQN6JKFLO7KMXGWM7CARSW2EP
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CD3TP3PL7U63IEEB4LQCEFV2AMZSOWGWQN6JKFLO7KMXGWM7CARSW2EP
-    file_url: https://github.com/enzoblain/ZKross/blob/HEAD/https%3A//zkross.pages.dev/assets/index-Zi1DV6ON.js
+    file_url: https://zkross.pages.dev/assets/index-Zi1DV6ON.js
 contributors:
 - login: EminBgA
   contributions: 39
