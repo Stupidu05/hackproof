@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 EXPLORER = "https://stellar.expert/explorer/testnet"
 
 
@@ -22,4 +24,4 @@ def asset_url(asset: str) -> str:
 
 
 def repo_file_url(repo_url: str, path: str) -> str:
-    return f"{repo_url}/blob/HEAD/{path}"
+    return f"{repo_url}/blob/HEAD/{quote(path, safe='/')}"

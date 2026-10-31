@@ -32,22 +32,22 @@ chain:
     subject: CALNJB6DW5BCMHVGMZIDNLQ2GHA4HW5EP3Q2F26NAGVBFSAHOM2NX5JK
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CALNJB6DW5BCMHVGMZIDNLQ2GHA4HW5EP3Q2F26NAGVBFSAHOM2NX5JK
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo contract and testnet proofs.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo%20contract%20and%20testnet%20proofs.md
   - kind: contract
     subject: CBOM5ZZR65EFXF4E7L7GF5F5AES3DSYBYNZHHXJYPDGZTSDFKGVPZM7U
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CBOM5ZZR65EFXF4E7L7GF5F5AES3DSYBYNZHHXJYPDGZTSDFKGVPZM7U
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo contract and testnet proofs.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo%20contract%20and%20testnet%20proofs.md
   - kind: contract
     subject: CCBJVXMJYWPHTDJHDFPRGKPGXGEP24JOPJAMUS5C3BMZJTRTWR2H4LII
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CCBJVXMJYWPHTDJHDFPRGKPGXGEP24JOPJAMUS5C3BMZJTRTWR2H4LII
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo contract and testnet proofs.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo%20contract%20and%20testnet%20proofs.md
   - kind: contract
     subject: CD7BUCY3DC7GTHRWFRBHNOFPMGVCHFDL4LHKXZNGEJISSGHI24KSNH3F
     method: contract_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/contract/CD7BUCY3DC7GTHRWFRBHNOFPMGVCHFDL4LHKXZNGEJISSGHI24KSNH3F
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo contract and testnet proofs.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo%20contract%20and%20testnet%20proofs.md
   - kind: contract
     subject: CDDWEENF6DKM4AHFWDBHQTYPLC3STMVFPXHXYDORLD53WDZM3FF3KJX4
     method: contract_in_repo
@@ -57,22 +57,22 @@ chain:
     subject: GAUKDWMR5EZWVG46O7OREZQ7ZY37NSHTFMT3US3RYICYT3HOJL4UCEFR
     method: deployer_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/account/GAUKDWMR5EZWVG46O7OREZQ7ZY37NSHTFMT3US3RYICYT3HOJL4UCEFR
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/HackMeridian rail.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/HackMeridian%20rail.md
   - kind: account
     subject: GAVDGEJFRQ4O2XQD7RTDJ5UJWDQ252ZFP6FIBFOV4PE3CM4GBYPH5UTZ
     method: deployer_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/account/GAVDGEJFRQ4O2XQD7RTDJ5UJWDQ252ZFP6FIBFOV4PE3CM4GBYPH5UTZ
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo contract and testnet proofs.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo%20contract%20and%20testnet%20proofs.md
   - kind: account
     subject: GD54SSZGLU6QXILEBQMJZ5F5IW35UELJN3FEKC77ZE23BXK5BHPV2CO4
     method: deployer_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/account/GD54SSZGLU6QXILEBQMJZ5F5IW35UELJN3FEKC77ZE23BXK5BHPV2CO4
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo contract and testnet proofs.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/Leo%20contract%20and%20testnet%20proofs.md
   - kind: account
     subject: GDWNU6TTJCZOQ3ZQI5NYALATL7IVMHR4PWEP5E3TXEK7EKOJNDORTPPW
     method: deployer_in_repo
     explorer_url: https://stellar.expert/explorer/testnet/account/GDWNU6TTJCZOQ3ZQI5NYALATL7IVMHR4PWEP5E3TXEK7EKOJNDORTPPW
-    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/HackMeridian rail.md
+    file_url: https://github.com/pwsaragossy/hackmeridian-cos/blob/HEAD/board/HackMeridian%20rail.md
 contributors:
 - login: pwsaragossy
   contributions: 443
