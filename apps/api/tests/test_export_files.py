@@ -4,7 +4,10 @@ import yaml
 
 from hackproof.export.build import build_export
 from hackproof.export.files import (
+    EVENT_FILE,
+    EVENT_SCHEMA_FILE,
     SCHEMA_FILE,
+    event_schema,
     file_names,
     file_schema,
     project_file,
@@ -85,7 +88,7 @@ async def test_a_name_without_letters_or_digits_is_an_error(scratch_db):
         file_names(export.projects)
 
 
-async def test_writing_files_replaces_stale_ones_and_writes_the_schema(scratch_db, tmp_path):
+async def test_writing_files_replaces_stale_ones_and_keeps_the_event_manifest(scratch_db, tmp_path):
     export = await likely_export(scratch_db, "team/app")
     year = tmp_path / str(export.hackathon.starts_at.year)
     year.mkdir()
@@ -94,6 +97,21 @@ async def test_writing_files_replaces_stale_ones_and_writes_the_schema(scratch_d
     count = write_project_files(export, tmp_path)
 
     assert count == 1
-    assert [path.name for path in year.glob("*.yml")] == ["app.yml"]
+    assert sorted(path.name for path in year.glob("*.yml")) == [EVENT_FILE, "app.yml"]
     jsonschema.validate(yaml.safe_load((year / "app.yml").read_text()), file_schema())
     assert yaml.safe_load((tmp_path / SCHEMA_FILE).read_text())["title"] == "ProjectFile"
+
+
+async def test_the_event_manifest_validates_and_names_the_event(scratch_db, tmp_path):
+    export = await likely_export(scratch_db, "team/app")
+
+    write_project_files(export, tmp_path)
+    year = tmp_path / str(export.hackathon.starts_at.year)
+    text = (year / EVENT_FILE).read_text()
+    manifest = yaml.safe_load(text)
+
+    jsonschema.validate(manifest, event_schema())
+    assert text.startswith(f"# yaml-language-server: $schema=../{EVENT_SCHEMA_FILE}\n")
+    assert manifest["slug"] == export.hackathon.slug
+    assert manifest["network"] == "testnet"
+    assert manifest["ends_at"] > manifest["starts_at"]

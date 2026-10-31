@@ -22,7 +22,7 @@ for (const entry of published) {
 }
 
 const folder = path.join(source, LEGACY.year)
-const files = (await readdir(folder)).filter((name) => name.endsWith('.yml')).sort()
+const files = (await readdir(folder)).filter((name) => name.endsWith('.yml') && !name.startsWith('_')).sort()
 const projects = await Promise.all(
   files.map(async (name) => parse(await readFile(path.join(folder, name), 'utf8'))),
 )

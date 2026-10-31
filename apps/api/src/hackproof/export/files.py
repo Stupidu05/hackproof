@@ -11,7 +11,11 @@ from hackproof.export.models import HackathonExport, Project, Tier, Track
 from hackproof.hackathon import Place
 
 SCHEMA_FILE = "schema-hackathon-project.yml"
+EVENT_FILE = "_event.yml"
+EVENT_SCHEMA_FILE = "schema-event.yml"
+SOURCE_URL = "https://github.com/devodii/hackproof"
 SCHEMA_COMMENT = f"# yaml-language-server: $schema=../{SCHEMA_FILE}\n"
+EVENT_SCHEMA_COMMENT = f"# yaml-language-server: $schema=../{EVENT_SCHEMA_FILE}\n"
 
 
 class FileModel(BaseModel):
@@ -53,6 +57,17 @@ class FileIntegration(FileModel):
 class FileContributor(FileModel):
     login: str
     contributions: int
+
+
+class EventFile(FileModel):
+    slug: str = Field(description="Event slug, lowercase words separated by hyphens")
+    name: str
+    network: Literal["pubnet", "testnet", "futurenet"] = Field(
+        description="Stellar network the event ran on"
+    )
+    starts_at: datetime = Field(description="Official start, UTC")
+    ends_at: datetime = Field(description="Official submission deadline, UTC")
+    source_url: str | None = Field(default=None, description="Where the dataset is produced")
 
 
 class ProjectFile(FileModel):
@@ -101,6 +116,32 @@ def file_names(projects: list[Project]) -> dict[str, str]:
         raise ValueError(f"file names still collide: {', '.join(clashes)}")
 
     return names
+
+
+def event_file(export: HackathonExport) -> EventFile:
+    hackathon = export.hackathon
+    return EventFile(
+        slug=hackathon.slug,
+        name=hackathon.name,
+        network=hackathon.network,
+        starts_at=hackathon.starts_at,
+        ends_at=hackathon.submission_deadline,
+        source_url=SOURCE_URL,
+    )
+
+
+def to_event_yaml(file: EventFile) -> str:
+    data = file.model_dump(mode="json", exclude_none=True)
+    body = yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=120)
+
+    return EVENT_SCHEMA_COMMENT + body
+
+
+def event_schema() -> dict[str, Any]:
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        **EventFile.model_json_schema(),
+    }
 
 
 def project_file(event: str, project: Project) -> ProjectFile:
@@ -182,12 +223,14 @@ def write_project_files(export: HackathonExport, root: Path) -> int:
     for project in export.projects:
         path = directory / f"{names[project.repo_full_name]}.yml"
         path.write_text(to_file_yaml(project_file(export.hackathon.slug, project)))
-    wanted = {f"{name}.yml" for name in names.values()}
+    (directory / EVENT_FILE).write_text(to_event_yaml(event_file(export)))
+    wanted = {f"{name}.yml" for name in names.values()} | {EVENT_FILE}
     for stale in directory.glob("*.yml"):
         if stale.name not in wanted:
             stale.unlink()
-    (root / SCHEMA_FILE).write_text(
-        yaml.safe_dump(file_schema(), sort_keys=False, allow_unicode=True, width=120)
-    )
+    for name, schema in ((SCHEMA_FILE, file_schema()), (EVENT_SCHEMA_FILE, event_schema())):
+        (root / name).write_text(
+            yaml.safe_dump(schema, sort_keys=False, allow_unicode=True, width=120)
+        )
 
     return len(export.projects)

@@ -9,6 +9,8 @@ data/
   hackmeridian-2026.yaml         event config: window, awards, discovery queries
   integrations.yaml              Stellar integration partners and how each is detected
   schema-hackathon-project.yml   JSON Schema for every project file, generated
+  schema-event.yml               JSON Schema for the event manifest, generated
+  2026/_event.yml                event manifest: slug, name, network, window
   2026/<project>.yml             one file per HackMeridian 2026 project
 ```
 
@@ -35,6 +37,13 @@ The site publishes this folder at `/data` on every build:
 - `/data/hackmeridian-2026/projects.json` and `projects.yml`: the whole year in one file, built from
   `data/2026` so links shared earlier keep working. The project fields follow the project files, not
   the old export.
+
+## Event manifest
+
+Each year folder holds `_event.yml`, which says what the files in it belong to: the event `slug` and
+`name`, the Stellar `network` it ran on (`pubnet`, `testnet` or `futurenet`), its `starts_at` and
+`ends_at`, and where the dataset is produced. A reader needs only this folder to import an event.
+The leading underscore keeps it from ever clashing with a project name.
 
 ## File names
 
