@@ -121,3 +121,27 @@ partners:
     packages:
       js: ["@axelar-network/axelarjs-sdk"]
       rust: [stellar-axelar-std]
+
+tools:
+  - slug: stellar-scaffold
+    name: Scaffold Stellar
+    site: https://github.com/theahaco/scaffold-stellar
+    packages:
+      rust:
+        [stellar-scaffold-cli, stellar-scaffold-macro, stellar-scaffold-ext-types, stellar-scaffold-reporter]
+      js: ["@stellar-scaffold/app-lib", "@stellar-scaffold/ui"]
+    github_owners: [theahaco, stellar-scaffold]
+
+  - slug: stellar-registry
+    name: Stellar Registry
+    site: https://github.com/stellar-registry
+    packages:
+      rust:
+        [
+          stellar-registry,
+          stellar-registry-build,
+          stellar-registry-cli,
+          stellar-registry-macro,
+          stellar-registry-name,
+        ]
+    github_owners: [stellar-registry, theahaco]
