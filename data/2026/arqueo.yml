@@ -24,6 +24,19 @@ integrations:
   - method: package
     detail: '@creit.tech/stellar-wallets-kit'
     file_url: https://github.com/Dabuca/arqueo/blob/HEAD/app-lib/package.json
+tools:
+- slug: stellar-scaffold
+  name: Scaffold Stellar
+  evidence:
+  - method: package
+    detail: '@stellar-scaffold/app-lib'
+    file_url: https://github.com/Dabuca/arqueo/blob/HEAD/app/package.json
+- slug: stellar-registry
+  name: Stellar Registry
+  evidence:
+  - method: package
+    detail: stellar-registry
+    file_url: https://github.com/Dabuca/arqueo/blob/HEAD/Cargo.toml
 chain:
   contracts: 3
   wasm_uploads: 2

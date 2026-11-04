@@ -49,6 +49,13 @@ integrations:
   - method: package
     detail: '@creit.tech/stellar-wallets-kit'
     file_url: https://github.com/bitfalt/scaffold-stellar-agentic/blob/HEAD/app-lib/package.json
+tools:
+- slug: stellar-scaffold
+  name: Scaffold Stellar
+  evidence:
+  - method: package
+    detail: '@stellar-scaffold/app-lib'
+    file_url: https://github.com/bitfalt/scaffold-stellar-agentic/blob/HEAD/app/package.json
 chain:
   contracts: 0
   wasm_uploads: 1
