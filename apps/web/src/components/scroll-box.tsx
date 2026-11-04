@@ -50,7 +50,7 @@ export function ScrollBox({ hasMore, loading, onMore, children }: ScrollBoxProps
     const atStart = el.scrollTop <= EDGE
     if (direction > 0 ? !atEnd : !atStart) return
     lockedUntil.current = Date.now() + JUMP_MS
-    document.getElementById(direction > 0 ? 'about' : 'overview')?.scrollIntoView({
+    document.getElementById(direction > 0 ? 'site-footer' : 'overview')?.scrollIntoView({
       behavior: 'smooth',
     })
   }

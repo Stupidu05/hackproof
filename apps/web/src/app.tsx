@@ -4,7 +4,6 @@ import { ChatDock } from '@/components/chat/chat-dock'
 import { ChatOverlay } from '@/components/chat/chat-overlay'
 import { ChatProvider } from '@/components/chat/chat-provider'
 import { useChatPanel } from '@/components/chat/use-chat-panel'
-import { About } from '@/components/layout/about'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { BuilderPage } from '@/pages/builder'
@@ -28,7 +27,6 @@ function Shell() {
             <Route path="/builder/:address" element={<BuilderPage />} />
           </Routes>
         </main>
-        <About />
         <SiteFooter />
         <ChatDock />
       </div>
