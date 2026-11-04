@@ -16,7 +16,7 @@ from hackproof.github.refs import extract_refs
 from hackproof.github.track import declared_track
 from hackproof.hackathon import Discovery
 from hackproof.integrations.catalog import Catalog, get_catalog
-from hackproof.integrations.detect import detect
+from hackproof.integrations.detect import detect, detect_tools
 
 TEXT_SUFFIXES = {
     ".rs", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".py", ".go", ".toml", ".json",
@@ -130,6 +130,7 @@ class Scanner:
             dependencies=dependencies,
             stellar_added_in_window=added,
             integrations=detect(files, self._catalog, repo.owner),
+            tools=detect_tools(files, self._catalog, repo.owner),
             contributors=contributors_from(people),
         )
 
@@ -174,6 +175,11 @@ async def store_scan(connection: asyncpg.Connection, scan: RepoScan) -> None:
         await connection.executemany(
             "INSERT INTO repo_integrations VALUES ($1, $2, $3, $4, $5)",
             [(scan.full_name, i.slug, i.method, i.evidence, i.path) for i in scan.integrations],
+        )
+        await connection.execute("DELETE FROM repo_tools WHERE full_name = $1", scan.full_name)
+        await connection.executemany(
+            "INSERT INTO repo_tools VALUES ($1, $2, $3, $4, $5)",
+            [(scan.full_name, t.slug, t.method, t.evidence, t.path) for t in scan.tools],
         )
         await connection.execute(
             """

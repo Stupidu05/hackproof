@@ -59,4 +59,5 @@ class RepoScan(BaseModel):
     dependencies: DependencyFingerprint
     stellar_added_in_window: bool | None
     integrations: list[Detection]
+    tools: list[Detection] = Field(default_factory=list)
     contributors: list[Contributor]
