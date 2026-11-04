@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { apiGet } from '@/lib/api'
 import { STRICT_TIERS } from '@/lib/format'
-import type { Integration, Page, Project } from '@/lib/types'
+import type { EcosystemTool, Integration, Page, Project } from '@/lib/types'
 
 const EVERYTHING = 200
 
@@ -13,6 +13,14 @@ export function useProjects() {
   return useQuery({
     queryKey: ['projects', 'all'],
     queryFn: async () => (await apiGet<Page<Project>>(`/projects?${params}`)).items,
+  })
+}
+
+export function useTools() {
+  return useQuery({
+    queryKey: ['tools'],
+    queryFn: () => apiGet<EcosystemTool[]>('/tools'),
+    staleTime: Infinity,
   })
 }
 

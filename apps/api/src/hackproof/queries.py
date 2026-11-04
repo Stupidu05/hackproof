@@ -15,6 +15,8 @@ SELECT p.project_id, p.full_name, r.url, p.footprint, p.tier, p.contracts, p.cla
        r.created_at, r.topics, COALESCE(r.declared_track, 'genesis') AS track,
        ARRAY(SELECT i.partner FROM repo_integrations i WHERE i.full_name = p.full_name
              GROUP BY i.partner ORDER BY i.partner) AS integrations,
+       ARRAY(SELECT t.tool FROM repo_tools t WHERE t.full_name = p.full_name
+             GROUP BY t.tool ORDER BY t.tool) AS tools,
        count(*) OVER () AS total
 FROM projects p
 LEFT JOIN repos r ON r.full_name = p.full_name
@@ -31,6 +33,9 @@ WHERE ($1::text IS NULL
        SELECT 1 FROM repo_integrations i
        WHERE i.full_name = p.full_name AND i.partner = ANY($8)))
   AND ($9::text[] IS NULL OR p.project_id = ANY($9))
+  AND ($10::text[] IS NULL OR EXISTS (
+       SELECT 1 FROM repo_tools t
+       WHERE t.full_name = p.full_name AND t.tool = ANY($10)))
 ORDER BY array_position(
              ARRAY['verified', 'likely', 'possible', 'unattributed'], p.tier),
          p.contracts DESC, p.classic_ops DESC, r.stars DESC NULLS LAST, p.last_activity DESC
@@ -157,6 +162,20 @@ WHERE full_name = $1
 ORDER BY partner, method, evidence
 """
 
+TOOLS_SQL = """
+SELECT t.tool AS slug, count(DISTINCT t.full_name) AS projects
+FROM repo_tools t
+JOIN projects p ON p.full_name = t.full_name AND p.tier IN ('verified', 'likely')
+GROUP BY t.tool
+"""
+
+TOOL_USES_SQL = """
+SELECT tool AS slug, method, evidence, path
+FROM repo_tools
+WHERE full_name = $1
+ORDER BY tool, method, evidence
+"""
+
 COUNTRIES_SQL = """
 SELECT u.country, count(DISTINCT c.login) AS contributors
 FROM repo_contributors c
@@ -192,6 +211,7 @@ async def list_page(
     tiers: list[str] | None = None,
     track: str | None = None,
     integrations: list[str] | None = None,
+    tools: list[str] | None = None,
     winners: bool = False,
     limit: int = 50,
     offset: int = 0,
@@ -199,7 +219,7 @@ async def list_page(
     awards = places()
     winner_ids = list(awards) if winners else None
     args = (
-        (q, account, project_id, tiers, limit, offset, track, integrations, winner_ids)
+        (q, account, project_id, tiers, limit, offset, track, integrations, winner_ids, tools)
         if resource == "projects"
         else (*window(), q, account, project_id, limit, offset)
     )
@@ -239,6 +259,22 @@ async def fetch_integration_uses(full_name: str) -> list[dict[str, Any]]:
         rows = await connection.fetch(INTEGRATION_USES_SQL, full_name)
     names = {partner.slug: partner.name for partner in get_catalog().partners}
     return [{**row, "name": names[row["slug"]]} for row in map(dict, rows) if row["slug"] in names]
+
+
+async def fetch_tool_uses(full_name: str) -> list[dict[str, Any]]:
+    async with pool().acquire() as connection:
+        rows = await connection.fetch(TOOL_USES_SQL, full_name)
+    names = {tool.slug: tool.name for tool in get_catalog().tools}
+    return [{**row, "name": names[row["slug"]]} for row in map(dict, rows) if row["slug"] in names]
+
+
+async def fetch_tools() -> list[dict[str, Any]]:
+    async with pool().acquire() as connection:
+        counts = {row["slug"]: row["projects"] for row in await connection.fetch(TOOLS_SQL)}
+    return [
+        {**tool.model_dump(include={"slug", "name", "site"}), "projects": counts.get(tool.slug, 0)}
+        for tool in get_catalog().tools
+    ]
 
 
 async def fetch_integrations() -> list[dict[str, Any]]:

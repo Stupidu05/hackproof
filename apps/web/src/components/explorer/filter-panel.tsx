@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { countryName, flagEmoji, placeLabel, tierLabel, trackLabel } from '@/lib/format'
-import type { Integration, Project } from '@/lib/types'
+import type { EcosystemTool, Integration, Project } from '@/lib/types'
 
 import { countValues, type FilterKey, type Selection, selectedCount } from './filters'
 
@@ -19,6 +19,7 @@ interface Option {
 interface FilterPanelProps {
   projects: Project[]
   integrations: Integration[]
+  tools: EcosystemTool[]
   selection: Selection
   onToggle: (key: FilterKey, value: string) => void
   onClear: () => void
@@ -47,6 +48,7 @@ function options(
   key: FilterKey,
   projects: Project[],
   integrations: Integration[],
+  tools: EcosystemTool[],
   selection: Selection,
 ): Option[] {
   const counts = countValues(projects, selection, key)
@@ -56,16 +58,18 @@ function options(
       ? FIXED[key].map(([value, label]) => [value, label])
       : key === 'partner'
         ? integrations.map((item) => [item.slug, item.name, item.category])
-        : [
-            ...new Set(
-              projects.flatMap(
-                (project) => (key === 'language' ? project.language : project.country) ?? [],
+        : key === 'tool'
+          ? tools.map((item) => [item.slug, item.name])
+          : [
+              ...new Set(
+                projects.flatMap(
+                  (project) => (key === 'language' ? project.language : project.country) ?? [],
+                ),
               ),
-            ),
-          ].map((value) => [
-            value,
-            key === 'country' ? `${flagEmoji(value)} ${countryName(value)}` : value,
-          ])
+            ].map((value) => [
+              value,
+              key === 'country' ? `${flagEmoji(value)} ${countryName(value)}` : value,
+            ])
   return labelled
     .map(([value, label, hint]) => ({ value, label, hint, count: counts.get(value) ?? 0 }))
     .filter((option) => option.count > 0 || chosen.has(option.value))
@@ -121,6 +125,7 @@ const GROUPS: { key: FilterKey; title: string; collapsible: boolean }[] = [
   { key: 'tier', title: 'Evidence', collapsible: false },
   { key: 'track', title: 'Track', collapsible: false },
   { key: 'partner', title: 'Integrations', collapsible: true },
+  { key: 'tool', title: 'Ecosystem tooling', collapsible: false },
   { key: 'activity', title: 'On-chain activity', collapsible: false },
   { key: 'language', title: 'Language', collapsible: true },
   { key: 'country', title: 'Country', collapsible: true },
@@ -129,6 +134,7 @@ const GROUPS: { key: FilterKey; title: string; collapsible: boolean }[] = [
 export function FilterPanel({
   projects,
   integrations,
+  tools,
   selection,
   onToggle,
   onClear,
@@ -149,7 +155,7 @@ export function FilterPanel({
         <Group
           key={key}
           title={title}
-          items={options(key, projects, integrations, selection)}
+          items={options(key, projects, integrations, tools, selection)}
           chosen={selection[key]}
           onToggle={(value) => onToggle(key, value)}
           collapsible={collapsible}

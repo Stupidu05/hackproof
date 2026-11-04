@@ -128,6 +128,16 @@ CREATE TABLE IF NOT EXISTS repo_integrations (
 );
 CREATE INDEX IF NOT EXISTS repo_integrations_partner ON repo_integrations (partner);
 
+CREATE TABLE IF NOT EXISTS repo_tools (
+    full_name TEXT NOT NULL,
+    tool TEXT NOT NULL,
+    method TEXT NOT NULL,
+    evidence TEXT NOT NULL,
+    path TEXT NOT NULL,
+    PRIMARY KEY (full_name, tool, method, evidence)
+);
+CREATE INDEX IF NOT EXISTS repo_tools_tool ON repo_tools (tool);
+
 CREATE TABLE IF NOT EXISTS links (
     full_name TEXT NOT NULL,
     subject_kind TEXT NOT NULL,

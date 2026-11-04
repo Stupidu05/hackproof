@@ -1,5 +1,7 @@
-from hackproof.integrations.catalog import Catalog, Partner, get_catalog
-from hackproof.integrations.detect import detect
+import json
+
+from hackproof.integrations.catalog import Catalog, Partner, Tool, get_catalog
+from hackproof.integrations.detect import detect, detect_tools
 from hackproof.integrations.models import Detection
 
 CATALOG = Catalog(
@@ -97,3 +99,23 @@ def test_the_shipped_catalog_is_valid_and_unique():
 
     assert len(slugs) == len(set(slugs)) >= 10
     assert catalog.partner("trustless-work").packages["js"][0] == "@trustless-work/escrow"
+
+
+def test_tools_are_found_apart_from_partners():
+    catalog = Catalog(
+        partners=CATALOG.partners,
+        tools=[
+            Tool(
+                slug="scaffold",
+                name="Scaffold",
+                site="https://scaffold.example",
+                packages={"js": ["@scaffold/app-lib"]},
+            )
+        ],
+    )
+    files = {
+        "package.json": json.dumps({"dependencies": {"@scaffold/app-lib": "1", "@acme/sdk": "1"}})
+    }
+
+    assert {d.slug for d in detect_tools(files, catalog, "team")} == {"scaffold"}
+    assert {d.slug for d in detect(files, catalog, "team")} == {"acme"}

@@ -7,7 +7,7 @@ import { TierBadge } from '@/components/tier-badge'
 import { TrackBadge } from '@/components/track-badge'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { useIntegrations } from '@/hooks/use-projects'
+import { useIntegrations, useTools } from '@/hooks/use-projects'
 import { flagEmoji, formatNumber, projectName } from '@/lib/format'
 import type { Project } from '@/lib/types'
 
@@ -17,7 +17,11 @@ export function ProjectCard({ project }: { project: Project }) {
   const name = projectName(project.project_id)
   const topics = (project.topics ?? []).slice(0, VISIBLE_TOPICS)
   const { data: integrations = [] } = useIntegrations()
-  const partners = integrations.filter((item) => project.integrations?.includes(item.slug))
+  const { data: tools = [] } = useTools()
+  const partners = [
+    ...integrations.filter((item) => project.integrations?.includes(item.slug)),
+    ...tools.filter((item) => project.tools?.includes(item.slug)),
+  ]
 
   return (
     <Card size="sm" className="relative h-full transition-colors hover:bg-muted/40">

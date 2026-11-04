@@ -5,6 +5,7 @@ export const FILTER_KEYS = [
   'tier',
   'track',
   'partner',
+  'tool',
   'activity',
   'language',
   'country',
@@ -17,6 +18,7 @@ const VALUES: Record<FilterKey, (project: Project) => string[]> = {
   tier: (project) => [project.tier],
   track: (project) => (project.track ? [project.track] : []),
   partner: (project) => project.integrations ?? [],
+  tool: (project) => project.tools ?? [],
   activity: (project) => [
     ...(project.contracts > 0 ? ['contracts'] : []),
     ...(project.failed_txs > 0 ? ['failed'] : []),
@@ -26,7 +28,16 @@ const VALUES: Record<FilterKey, (project: Project) => string[]> = {
 }
 
 export function readSelection(params: URLSearchParams): Selection {
-  return Object.fromEntries(FILTER_KEYS.map((key) => [key, params.getAll(key)])) as Selection
+  return Object.fromEntries(
+    FILTER_KEYS.map((key) => [
+      key,
+      params
+        .getAll(key)
+        .flatMap((value) => value.split(','))
+        .map((value) => (key === 'tool' ? value.replaceAll('_', '-') : value))
+        .filter(Boolean),
+    ]),
+  ) as Selection
 }
 
 export function matches(project: Project, selection: Selection, skip?: FilterKey) {

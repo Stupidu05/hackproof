@@ -27,8 +27,16 @@ export function ProjectPage() {
   if (isPending) return <ProjectSkeleton />
   if (error) return <DetailError error={error} subject="project" />
 
-  const { project, links, integration_uses, contributors, contracts, wasm_uploads, failed_txs } =
-    data
+  const {
+    project,
+    links,
+    integration_uses,
+    tool_uses,
+    contributors,
+    contracts,
+    wasm_uploads,
+    failed_txs,
+  } = data
   const name = projectName(project.project_id)
   const direct = links.filter((link) => link.method !== 'footprint')
   const derived = links.length - direct.length
@@ -136,12 +144,21 @@ export function ProjectPage() {
           </div>
         )}
       </header>
-      <Accordion multiple defaultValue={['evidence', 'integrations']}>
+      <Accordion multiple defaultValue={['evidence', 'integrations', 'tools']}>
         {integration_uses.length > 0 && (
           <Section value="integrations" title="Integrations" count={integration_uses.length}>
             <DataTable
               columns={integrationColumns(project.full_name ?? '')}
               rows={integration_uses}
+              rowKey={(row) => `${row.slug}:${row.method}:${row.evidence}`}
+            />
+          </Section>
+        )}
+        {tool_uses.length > 0 && (
+          <Section value="tools" title="Ecosystem tooling" count={tool_uses.length}>
+            <DataTable
+              columns={integrationColumns(project.full_name ?? '')}
+              rows={tool_uses}
               rowKey={(row) => `${row.slug}:${row.method}:${row.evidence}`}
             />
           </Section>

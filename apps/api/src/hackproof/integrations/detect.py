@@ -1,8 +1,9 @@
 import re
+from collections.abc import Sequence
 from pathlib import PurePosixPath
 
 from hackproof.github.dependencies import ECOSYSTEM, PARSERS
-from hackproof.integrations.catalog import Catalog, Partner
+from hackproof.integrations.catalog import Catalog, Product
 from hackproof.integrations.models import Detection, Method
 
 PROSE_SUFFIXES = {".md", ".txt"}
@@ -12,7 +13,7 @@ def _normalize(ecosystem: str, name: str) -> str:
     return name.lower().replace("_", "-") if ecosystem == "python" else name
 
 
-def _declares(ecosystem: str, partner: Partner, declared: dict[str, str | None]) -> list[str]:
+def _declares(ecosystem: str, partner: Product, declared: dict[str, str | None]) -> list[str]:
     wanted = [_normalize(ecosystem, name) for name in partner.packages.get(ecosystem, [])]
     found = []
     for name in declared:
@@ -30,9 +31,17 @@ def _endpoint(host: str) -> re.Pattern[str]:
 
 
 def detect(files: dict[str, str], catalog: Catalog, owner: str) -> list[Detection]:
+    return _detect(files, catalog.partners, owner)
+
+
+def detect_tools(files: dict[str, str], catalog: Catalog, owner: str) -> list[Detection]:
+    return _detect(files, catalog.tools, owner)
+
+
+def _detect(files: dict[str, str], products: Sequence[Product], owner: str) -> list[Detection]:
     partners = [
         partner
-        for partner in catalog.partners
+        for partner in products
         if owner.lower() not in {name.lower() for name in partner.github_owners}
     ]
     endpoints = {

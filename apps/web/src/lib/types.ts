@@ -64,6 +64,14 @@ export interface Project {
   topics: string[] | null
   track: Track | null
   integrations: string[]
+  tools: string[]
+}
+
+export interface EcosystemTool {
+  slug: string
+  name: string
+  site: string
+  projects: number
 }
 
 export interface Integration {
@@ -131,6 +139,7 @@ export interface ProjectDetail {
   project: Project
   links: Link[]
   integration_uses: IntegrationUse[]
+  tool_uses: IntegrationUse[]
   contributors: Contributor[]
   contracts: Contract[]
   wasm_uploads: WasmUpload[]

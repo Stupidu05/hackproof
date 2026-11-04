@@ -238,6 +238,12 @@ properties:
       $ref: '#/$defs/FileIntegration'
     title: Integrations
     type: array
+  tools:
+    description: Stellar developer tools the repo builds with
+    items:
+      $ref: '#/$defs/FileIntegration'
+    title: Tools
+    type: array
   chain:
     $ref: '#/$defs/FileChain'
   contributors:
