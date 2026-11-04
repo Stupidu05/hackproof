@@ -2,6 +2,7 @@ import asyncio
 import hashlib
 import logging
 from collections import defaultdict
+from datetime import UTC, datetime
 
 import asyncpg
 import httpx
@@ -19,6 +20,15 @@ log = logging.getLogger("hackproof.sync")
 CHUNK_LEDGERS = 400
 CHUNK_PREFIX = "chunk:v2:"
 DEADLOCK_RETRIES = 5
+
+
+def ensure_within_retention(pull_start: datetime, oldest_closed_at: datetime) -> None:
+    if pull_start < oldest_closed_at:
+        raise RuntimeError(
+            f"the event window starts {pull_start:%Y-%m-%d %H:%M} UTC, before the oldest ledger "
+            f"the RPC still holds ({oldest_closed_at:%Y-%m-%d %H:%M} UTC); the RPC keeps about "
+            "7 days, so this window can no longer be synced"
+        )
 
 
 async def _fetch_chunk(rpc: SorobanRpc, network_id: bytes, start: int, end: int) -> list[Event]:
@@ -72,6 +82,10 @@ async def run_sync() -> None:
         health = await rpc.call("getHealth")
         oldest, latest = health["oldestLedger"], health["latestLedger"]
         window = get_hackathon().window
+        ensure_within_retention(
+            window.pull_start,
+            datetime.fromtimestamp(int(health["oldestLedgerCloseTime"]), tz=UTC),
+        )
         first = await horizon.first_ledger_at_or_after(window.pull_start, oldest, latest)
         last = await horizon.first_ledger_at_or_after(window.end, first, latest) - 1
         log.info("syncing ledgers %s to %s", first, last)
