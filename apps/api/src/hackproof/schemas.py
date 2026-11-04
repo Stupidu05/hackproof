@@ -54,6 +54,7 @@ class Project(BaseModel):
     topics: list[str] | None
     track: Literal["genesis", "scale"] | None = None
     integrations: list[str] = []
+    tools: list[str] = []
     award: Place | None = None
 
 
@@ -114,6 +115,7 @@ class ProjectDetail(BaseModel):
     project: Project
     links: list[Link]
     integration_uses: list[IntegrationUse]
+    tool_uses: list[IntegrationUse]
     contributors: list[Contributor]
     contracts: list[Contract]
     wasm_uploads: list[WasmUpload]
@@ -137,6 +139,13 @@ class Integration(BaseModel):
     slug: str
     name: str
     category: str
+    site: str
+    projects: int
+
+
+class EcosystemTool(BaseModel):
+    slug: str
+    name: str
     site: str
     projects: int
 

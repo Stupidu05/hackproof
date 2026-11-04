@@ -7,6 +7,7 @@ from hackproof.schemas import (
     Builder,
     Contract,
     CountryCount,
+    EcosystemTool,
     FailedTx,
     Integration,
     Page,
@@ -52,12 +53,18 @@ async def integrations() -> list[Integration]:
     return [Integration(**row) for row in await queries.fetch_integrations()]
 
 
+@router.get("/tools")
+async def tools() -> list[EcosystemTool]:
+    return [EcosystemTool(**row) for row in await queries.fetch_tools()]
+
+
 @router.get("/projects")
 async def projects(
     q: Search = None,
     tier: Tiers = None,
     track: Annotated[Literal["genesis", "scale"] | None, Query()] = None,
     integration: Annotated[list[str] | None, Query()] = None,
+    tool: Annotated[list[str] | None, Query()] = None,
     limit: Limit = 50,
     offset: Offset = 0,
 ) -> Page[Project]:
@@ -67,6 +74,7 @@ async def projects(
         tiers=list(tier) if tier else None,
         track=track,
         integrations=integration,
+        tools=tool,
         limit=limit,
         offset=offset,
     )
@@ -105,6 +113,9 @@ async def project(project_id: str) -> ProjectDetail:
             await queries.fetch_integration_uses(found[0]["full_name"])
             if found[0]["full_name"]
             else []
+        ),
+        tool_uses=(
+            await queries.fetch_tool_uses(found[0]["full_name"]) if found[0]["full_name"] else []
         ),
         contributors=(
             await queries.fetch_contributors(found[0]["full_name"]) if found[0]["full_name"] else []
