@@ -101,6 +101,13 @@ class IntegrationEvidence(Model):
     repo_file_url: str = Field(description="GitHub file where it was found")
 
 
+class EcosystemTool(Model):
+    slug: str = Field(description="Stable tool id, listed in data/integrations.yaml")
+    name: str = Field(description="Tool name")
+    website: str = Field(description="Tool website")
+    evidence: list[IntegrationEvidence] = Field(description="Where the tool was found")
+
+
 class IntegrationPartner(Model):
     slug: str = Field(description="Stable partner id, listed in data/integrations.yaml")
     name: str = Field(description="Partner name")
@@ -151,6 +158,9 @@ class Project(Model):
     total_commits: int | None = Field(description="Commits on the default branch")
     integration_partners: list[IntegrationPartner] = Field(
         description="Stellar ecosystem partners the repo integrates, from the SCF integration list"
+    )
+    ecosystem_tools: list[EcosystemTool] = Field(
+        description="Stellar developer tools the repo builds with, such as Scaffold Stellar"
     )
     owner: Owner
     contributors: list[Contributor]

@@ -93,6 +93,9 @@ class ProjectFile(FileModel):
         default_factory=dict, description="Stellar package to declared version, null when unknown"
     )
     integrations: list[FileIntegration] = Field(default_factory=list)
+    tools: list[FileIntegration] = Field(
+        default_factory=list, description="Stellar developer tools the repo builds with"
+    )
     chain: FileChain
     contributors: list[FileContributor]
 
@@ -176,6 +179,19 @@ def project_file(event: str, project: Project) -> ProjectFile:
                 ],
             )
             for partner in project.integration_partners
+        ],
+        tools=[
+            FileIntegration(
+                slug=tool.slug,
+                name=tool.name,
+                evidence=[
+                    FileIntegrationEvidence(
+                        method=item.method, detail=item.detail, file_url=item.repo_file_url
+                    )
+                    for item in tool.evidence
+                ],
+            )
+            for tool in project.ecosystem_tools
         ],
         chain=FileChain(
             contracts=chain.contract_count,

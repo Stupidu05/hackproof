@@ -9,6 +9,7 @@ from hackproof.export.models import (
     Chain,
     Contract,
     Contributor,
+    EcosystemTool,
     Evidence,
     HackathonExport,
     IntegrationEvidence,
@@ -89,6 +90,13 @@ WHERE full_name = ANY($1)
 ORDER BY partner, method, evidence
 """
 
+TOOLS_SQL = """
+SELECT full_name, tool, method, evidence, path
+FROM repo_tools
+WHERE full_name = ANY($1)
+ORDER BY tool, method, evidence
+"""
+
 
 def _evidence_url(kind: str, subject: str) -> str | None:
     match kind:
@@ -109,18 +117,34 @@ def _group(rows: Iterable[asyncpg.Record], key: str = "full_name") -> dict[str, 
     return grouped
 
 
-def _partners(
-    catalog: Catalog, rows: list[asyncpg.Record], repo_url: str
-) -> list[IntegrationPartner]:
+def _found(
+    rows: list[asyncpg.Record], key: str, repo_url: str
+) -> dict[str, list[IntegrationEvidence]]:
     found: dict[str, list[IntegrationEvidence]] = defaultdict(list)
     for row in rows:
-        found[row["partner"]].append(
+        found[row[key]].append(
             IntegrationEvidence(
                 method=row["method"],
                 detail=row["evidence"],
                 repo_file_url=repo_file_url(repo_url, row["path"]),
             )
         )
+    return found
+
+
+def _tools(catalog: Catalog, rows: list[asyncpg.Record], repo_url: str) -> list[EcosystemTool]:
+    found = _found(rows, "tool", repo_url)
+    return [
+        EcosystemTool(slug=tool.slug, name=tool.name, website=tool.site, evidence=found[tool.slug])
+        for tool in catalog.tools
+        if tool.slug in found
+    ]
+
+
+def _partners(
+    catalog: Catalog, rows: list[asyncpg.Record], repo_url: str
+) -> list[IntegrationPartner]:
+    found = _found(rows, "partner", repo_url)
     return [
         IntegrationPartner(
             slug=partner.slug,
@@ -148,6 +172,7 @@ async def build_export(
     wasm = _group(await connection.fetch(WASM_SQL, names, *span))
     evidence = _group(await connection.fetch(EVIDENCE_SQL, names))
     integrations = _group(await connection.fetch(INTEGRATIONS_SQL, names))
+    tools = _group(await connection.fetch(TOOLS_SQL, names))
     catalog = get_catalog()
     awards = {award.project_id: award.place for award in hackathon.awards}
 
@@ -174,6 +199,7 @@ async def build_export(
             track=row["declared_track"] or "genesis",
             track_declared=row["declared_track"] is not None,
             integration_partners=_partners(catalog, integrations[row["full_name"]], row["url"]),
+            ecosystem_tools=_tools(catalog, tools[row["full_name"]], row["url"]),
             owner=Owner(login=row["owner"], avatar_url=row["owner_avatar"], country=row["country"]),
             contributors=[
                 Contributor(
