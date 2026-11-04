@@ -6,18 +6,26 @@ from pydantic import BaseModel, Field
 from hackproof.config import get_settings
 
 
-class Partner(BaseModel):
+class Product(BaseModel):
     slug: str
     name: str
-    category: str
     site: str
     packages: dict[str, list[str]] = Field(default_factory=dict)
     endpoints: list[str] = Field(default_factory=list)
     github_owners: list[str] = Field(default_factory=list)
 
 
+class Partner(Product):
+    category: str
+
+
+class Tool(Product):
+    pass
+
+
 class Catalog(BaseModel):
     partners: list[Partner]
+    tools: list[Tool] = Field(default_factory=list)
 
     def partner(self, slug: str) -> Partner:
         return next(partner for partner in self.partners if partner.slug == slug)
