@@ -6,6 +6,7 @@ from pathlib import PurePosixPath
 from hackproof.github.models import DependencyFingerprint
 
 MANIFESTS = {"Cargo.toml", "package.json", "requirements.txt", "pyproject.toml", "go.mod"}
+SKIP_DIRECTORIES = {"node_modules", "dist", "target", ".git", "build", "vendor", ".next"}
 ECOSYSTEM = {
     "Cargo.toml": "rust",
     "package.json": "js",

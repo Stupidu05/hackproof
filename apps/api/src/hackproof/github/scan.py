@@ -8,13 +8,13 @@ import httpx
 
 from hackproof.github.client import GithubClient
 from hackproof.github.demo import scan_demo
-from hackproof.github.dependencies import MANIFESTS, fingerprint
+from hackproof.github.dependencies import MANIFESTS, SKIP_DIRECTORIES, fingerprint
 from hackproof.github.files import fetch_texts
 from hackproof.github.history import stellar_added_in_window
 from hackproof.github.models import Candidate, Contributor, Ref, RepoScan
 from hackproof.github.refs import extract_refs
 from hackproof.github.track import declared_track
-from hackproof.hackathon import Discovery
+from hackproof.hackathon import Discovery, Window
 from hackproof.integrations.catalog import Catalog, get_catalog
 from hackproof.integrations.detect import detect, detect_tools
 
@@ -22,7 +22,6 @@ TEXT_SUFFIXES = {
     ".rs", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".py", ".go", ".toml", ".json",
     ".md", ".yml", ".yaml", ".sh", ".txt", ".html", ".env", ".sol", ".vue", ".svelte",
 }  # fmt: skip
-SKIP_DIRECTORIES = {"node_modules", "dist", "target", ".git", "build", "vendor", ".next"}
 SKIP_FILES = {"package-lock.json", "pnpm-lock.yaml", "yarn.lock", "Cargo.lock", "poetry.lock"}
 FILE_CONCURRENCY = 100
 MAX_TEXT_FILES = 60
@@ -79,11 +78,13 @@ class Scanner:
         github: GithubClient,
         http: httpx.AsyncClient,
         discovery: Discovery,
+        window: Window,
         catalog: Catalog | None = None,
     ) -> None:
         self._github = github
         self._http = http
         self._discovery = discovery
+        self._window = window
         self._catalog = catalog or get_catalog()
         self._files = asyncio.Semaphore(FILE_CONCURRENCY)
 
@@ -118,7 +119,7 @@ class Scanner:
         dependencies = fingerprint(files, wanted)
         added = (
             await stellar_added_in_window(
-                self._github, repo.full_name, files, wanted, repo.base_sha
+                self._github, repo.full_name, wanted, repo.base_sha, self._window.end
             )
             if dependencies.packages
             else None
