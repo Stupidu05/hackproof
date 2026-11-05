@@ -78,7 +78,7 @@ async def run_scan(force: bool, projects_only: bool = False) -> None:
         repos = [Candidate(**row) for row in rows]
         log.info("scanning %s repos", len(repos))
 
-        scanner = Scanner(github, http, hackathon.discovery)
+        scanner = Scanner(github, http, hackathon.discovery, hackathon.window)
         gate = asyncio.Semaphore(SCAN_CONCURRENCY)
         done = 0
 
