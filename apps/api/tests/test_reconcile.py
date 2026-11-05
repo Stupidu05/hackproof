@@ -173,3 +173,17 @@ async def test_a_chain_item_matched_by_two_repos_is_credited_to_the_older_one(sc
     second = await db.fetchval("SELECT full_name FROM attribution WHERE subject = 'C1'")
 
     assert first == second == "team/original"
+
+
+async def test_an_excluded_repo_never_becomes_a_project(scratch_db):
+    db = scratch_db
+    await add_repo(db, "stellar-scaffold/cli", window_commits=9)
+    await add_ref(db, "stellar-scaffold/cli", "contract", "C1")
+    await add_contract(db, "C1", "GDEPLOYER", "w1")
+
+    await reconcile(db)
+
+    found = await db.fetchval(
+        "SELECT count(*) FROM projects WHERE project_id = 'repo:stellar-scaffold/cli'"
+    )
+    assert found == 0

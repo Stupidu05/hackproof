@@ -86,4 +86,5 @@ discovery:
     python: [stellar-sdk, stellar_sdk]
     go: [github.com/stellar/go]
   exclude_owners: [stellar, stellar-expert, soroban, creit-tech, stellar-light]
+  exclude_repos: [stellar-scaffold/cli, NethermindEth/stellar-private-payments]
   known_infra_accounts: []

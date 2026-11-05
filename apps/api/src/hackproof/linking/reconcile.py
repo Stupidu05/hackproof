@@ -247,6 +247,10 @@ async def reconcile(connection: asyncpg.Connection) -> Report:
         official = (window.start, window.end)
         await connection.execute(REPO_PROJECTS, *official, MIN_WINDOW_COMMITS, MIN_LIKELY_COMMITS)
         await connection.execute(ACCOUNT_PROJECTS, *official, settings.friendbot_account)
+        await connection.execute(
+            "DELETE FROM projects WHERE lower(project_id) = ANY($1)",
+            [f"repo:{name.lower()}" for name in hackathon.discovery.exclude_repos],
+        )
 
     methods = await connection.fetch("SELECT method, count(*) AS n FROM links GROUP BY method")
     footprints = await connection.fetch(
