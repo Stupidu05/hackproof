@@ -22,6 +22,7 @@ class Discovery(BaseModel):
     github_string_queries: list[str]
     dependency_fingerprints: dict[str, list[str]]
     exclude_owners: list[str]
+    exclude_repos: list[str] = []
     known_infra_accounts: list[str]
 
 

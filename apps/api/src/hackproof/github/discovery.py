@@ -30,6 +30,8 @@ def is_pinned(candidate: Candidate) -> bool:
 
 
 def should_keep(candidate: Candidate, window: Window, discovery: Discovery) -> bool:
+    if candidate.full_name.lower() in {name.lower() for name in discovery.exclude_repos}:
+        return False
     if is_pinned(candidate):
         return True
     if candidate.fork or candidate.owner.lower() in {o.lower() for o in discovery.exclude_owners}:

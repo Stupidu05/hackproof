@@ -17,6 +17,7 @@ DISCOVERY = Discovery(
     github_string_queries=[],
     dependency_fingerprints={},
     exclude_owners=["stellar"],
+    exclude_repos=["team/tool"],
     known_infra_accounts=[],
 )
 
@@ -48,6 +49,12 @@ def test_repos_named_in_wasm_metadata_bypass_every_filter():
     )
     assert is_pinned(stale)
     assert should_keep(stale, WINDOW, DISCOVERY)
+
+
+def test_excluded_repos_stay_out_even_when_wasm_metadata_names_them():
+    assert not should_keep(
+        candidate(full_name="Team/Tool", discovered_via={"wasm_meta"}), WINDOW, DISCOVERY
+    )
 
 
 async def test_split_range_slices_until_every_range_fits_the_cap():
